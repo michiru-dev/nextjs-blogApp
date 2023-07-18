@@ -1,8 +1,14 @@
 import { GetStaticProps } from 'next'
 import axios from 'axios'
 import Link from 'next/link'
+import CreatePost from '../components/CreatePost'
+import { useState } from 'react'
 
 //ブログのデータを取得
+//今回は投稿が擬似的だからこれでいいけど、
+//本当に投稿機能がある場合はgetServerSidePropsでやらないと
+//投稿を追加してもビルド時にfetchされた情報がページに固定されているため
+//リフレッシュすると新しい投稿が消えてしまう
 export const getStaticProps: GetStaticProps = async () => {
   const allPostsData = await axios
     .get('https://jsonplaceholder.typicode.com/posts')
@@ -26,10 +32,17 @@ export type Props = PostProps[]
 
 //取得したデータを表示
 export default function Home({ allPostsData }: { allPostsData: Props }) {
+  const [posts, setPosts] = useState<Props>(allPostsData)
+
+  const updatePosts = (post: PostProps) => {
+    setPosts((prev) => [post, ...prev])
+  }
+
   return (
     <div>
+      <CreatePost updatePosts={updatePosts} />
       <ul>
-        {allPostsData.map((post) => {
+        {posts.map((post) => {
           return (
             <li key={post.id}>
               {/* リンク先を設定 
