@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 //レンダリング時にもちゃんと動く。（普通のコンポーネントと一緒の動き）
 
 //ブログのデータを取得
+//paramsを受け取らないgetStaticPropsはgetStaticpathsとセットじゃなくてOK
 //今回は投稿が擬似的だからこれでいいけど、
 //本当に投稿機能がある場合はgetServerSidePropsでやらないと
 //投稿を追加してもビルド時にfetchされた情報がページに固定されているため
