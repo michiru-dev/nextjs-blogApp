@@ -26,6 +26,9 @@ function CreatePost({ updatePosts }: CreatePostProps) {
       'https://jsonplaceholder.typicode.com/posts',
       blogPost
     )
+    const existingPosts = JSON.parse(localStorage.getItem('blogPost') ?? '[]')
+    existingPosts.push(post.data)
+    localStorage.setItem('blogPost', JSON.stringify(existingPosts))
     updatePosts(post.data)
   }
 

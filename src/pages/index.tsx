@@ -2,7 +2,11 @@ import { GetStaticProps } from 'next'
 import axios from 'axios'
 import Link from 'next/link'
 import CreatePost from '../components/CreatePost'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+//getStaticPropsを定義すればそのページは
+//ビルド時に出来上がるけど、そのコンポーネントの中のロジックとかは
+//レンダリング時にもちゃんと動く。（普通のコンポーネントと一緒の動き）
 
 //ブログのデータを取得
 //今回は投稿が擬似的だからこれでいいけど、
@@ -33,6 +37,19 @@ export type Props = PostProps[]
 //取得したデータを表示
 export default function Home({ allPostsData }: { allPostsData: Props }) {
   const [posts, setPosts] = useState<Props>(allPostsData)
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  useEffect(() => {
+    const item = localStorage.getItem('blogPost')
+    console.log(isInitialized)
+    if (item && !isInitialized) {
+      const parsedItem = JSON.parse(item)
+      //parsedItemも配列なので展開
+
+      setPosts((prev) => [...parsedItem, ...prev])
+      setIsInitialized(true)
+    }
+  }, [isInitialized])
 
   const updatePosts = (post: PostProps) => {
     setPosts((prev) => [post, ...prev])
